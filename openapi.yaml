@@ -1,0 +1,90 @@
+openapi: 3.1.0
+info:
+  title: 'Some API 2.0'
+  version: 2.0.0-beta.22
+security:
+  -
+    apiKey: []
+paths:
+  /api/sessions/create:
+    post:
+      operationId: createSession
+      summary: 'Creates session'
+      responses:
+        200:
+          description: 'Create session'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session:createResponse'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session:createRequest'
+        description: 'The new session resource'
+  '/api/sessions/{id}':
+    get:
+      operationId: getSession
+      summary: 'Retrieves a session resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Session resource response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session:getResource'
+        404:
+          description: 'Resource not found'
+components:
+  schemas:
+    'Session:getResource':
+      type: object
+      description: ''
+      properties:
+        name:
+          type: string
+          nullable: true
+        type:
+          type: string
+        version:
+          type: integer
+    'Session:createResponse':
+      type: object
+      description: ''
+      properties:
+        id:
+          type: number
+        payment_id:
+          type: string
+        action:
+          type: array
+          items:
+            type: string
+        provider_state:
+          type: string
+        provider_refusal_reason:
+          type: string
+    'Session:createRequest':
+      type: object
+      description: ''
+      properties:
+        id:
+          type: number
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      description: 'Value for the Authorization header'
+      name: Authorization
