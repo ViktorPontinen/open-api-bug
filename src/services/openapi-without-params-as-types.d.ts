@@ -4,7 +4,24 @@
  */
 
 export interface paths {
-    "/api/sessions/create": {
+    "/api/bookings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves a Booking resource. */
+        get: operations["Get Booking"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bookings/{id}/pay/session": {
         parameters: {
             query?: never;
             header?: never;
@@ -12,25 +29,8 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
-        /** Creates session */
-        post: operations["createSession"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/sessions/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Retrieves a session resource. */
-        get: operations["getSession"];
-        put?: never;
+        /** Creates payment session */
+        put: operations["Create Payment Session"];
         post?: never;
         delete?: never;
         options?: never;
@@ -42,19 +42,19 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        "Session:Get": {
-            name?: string | null;
-            type?: string;
-            version?: number;
+        Default_bookings_overview: {
+            readonly id?: number;
+            /** Format: uuid */
+            uuid?: string;
         };
-        "Session:createResponse": {
+        booking_pay_session_response: {
             payment_id?: string;
             action?: string[];
-            provider_state?: string;
-            provider_refusal_reason?: string;
         };
-        "Session:createRequest": {
-            id?: number;
+        booking_pay_session_request: {
+            return_url: string;
+            channel?: string | null;
+            is_native3d_secure?: boolean;
         };
     };
     responses: never;
@@ -65,46 +65,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    createSession: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description The new session resource */
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["Session:createRequest"];
-            };
-        };
-        responses: {
-            /** @description Create session */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Session:createResponse"];
-                };
-            };
-            /** @description Invalid input */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getSession: {
+    "Get Booking": {
         parameters: {
             query?: never;
             header?: never;
@@ -115,14 +76,55 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Session resource response */
+            /** @description Booking resource response */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Session:Get"];
+                    "application/json": components["schemas"]["Default_bookings_overview"];
                 };
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "Create Payment Session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated Bookings resource */
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["booking_pay_session_request"];
+            };
+        };
+        responses: {
+            /** @description Session created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["booking_pay_session_response"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Resource not found */
             404: {

@@ -6,10 +6,25 @@ import type { paths as pathsWithoutParamsAsTypes} from './openapi-without-params
 const clientWith = createClient<pathsWithParamsAsTypes, 'application/json'>({ baseUrl: 'https://api.example.com' })
 const clientWithout = createClient<pathsWithoutParamsAsTypes, 'application/json'>({ baseUrl: 'https://api.example.com' })
 
-export const createSessionWith = async () => {
-  return clientWith.POST('/api/sessions/create', {})
+export const createSessionWithParamsAsTypes = async (bookingId: string) => {
+  const { data, error } = await clientWith.PUT(`/api/bookings/${bookingId}/pay/session`, {
+    params: {
+      path: {
+        id: bookingId
+      }
+    }
+  })
+
+  return { data, error }
 }
 
-export const createSessionWithout = async () => {
-  return clientWithout.POST('/api/sessions/create', {})
+export const createSessionWithoutParamsAsTypes = async (bookingId: string) => {
+  const { data, error } = await clientWithout.PUT(`/api/bookings/{id}/pay/session`, {
+    params: {
+      path: {
+        id: bookingId
+      }
+    }
+  })
+  return { data, error }
 }

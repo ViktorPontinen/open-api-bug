@@ -6,31 +6,12 @@ security:
   -
     apiKey: []
 paths:
-  /api/sessions/create:
-    post:
-      operationId: createSession
-      summary: 'Creates session'
-      responses:
-        200:
-          description: 'Create session'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Session:createResponse'
-        400:
-          description: 'Invalid input'
-        404:
-          description: 'Resource not found'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Session:createRequest'
-        description: 'The new session resource'
-  '/api/sessions/{id}':
+  '/api/bookings/{id}':
     get:
-      operationId: getSession
-      summary: 'Retrieves a session resource.'
+      tags:
+        - Booking
+      operationId: Get Booking
+      summary: 'Retrieves a Booking resource.'
       parameters:
         -
           name: id
@@ -40,48 +21,78 @@ paths:
             type: string
       responses:
         200:
-          description: 'Session resource response'
+          description: 'Booking resource response'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Session:getResource'
+                $ref: '#/components/schemas/Default_bookings_overview'
         404:
           description: 'Resource not found'
+  '/api/bookings/{id}/pay/session':
+    put:
+      tags:
+        - Bookings
+      operationId: Create Payment Session
+      summary: 'Creates payment session'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Session created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/booking_pay_session_response'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/booking_pay_session_request'
+        description: 'The updated Bookings resource'
 components:
   schemas:
-    'Session:getResource':
-      type: object
-      description: ''
-      properties:
-        name:
-          type: string
-          nullable: true
-        type:
-          type: string
-        version:
-          type: integer
-    'Session:createResponse':
+    Default_bookings_overview:
       type: object
       description: ''
       properties:
         id:
-          type: number
+          readOnly: true
+          type: integer
+        uuid:
+          type: string
+          format: uuid
+    'booking_pay_session_response':
+      type: object
+      description: ''
+      properties:
         payment_id:
           type: string
         action:
           type: array
           items:
             type: string
-        provider_state:
-          type: string
-        provider_refusal_reason:
-          type: string
-    'Session:createRequest':
+    'booking_pay_session_request':
       type: object
       description: ''
       properties:
-        id:
-          type: number
+        return_url:
+          type: string
+        channel:
+          type: string
+          nullable: true
+        is_native3d_secure:
+          type: boolean
+      required:
+        - return_url
   securitySchemes:
     apiKey:
       type: apiKey
