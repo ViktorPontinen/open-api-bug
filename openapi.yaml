@@ -58,6 +58,66 @@ paths:
             schema:
               $ref: '#/components/schemas/booking_pay_session_request'
         description: 'The updated Bookings resource'
+  '/api/foo/bar/other-put':
+    put:
+      tags:
+        - Bookings
+      operationId: Create Payment Session
+      summary: 'Creates payment session'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Session created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/booking_pay_session_response'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/booking_pay_session_request'
+        description: 'The updated Bookings resource'
+  '/api/foo/bar/another-put':
+    put:
+      tags:
+        - Bookings
+      operationId: Create Payment Session
+      summary: 'Creates payment session'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Session created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/booking_pay_session_response'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/booking_pay_session_request'
+        description: 'The updated Bookings resource'
 components:
   schemas:
     Default_bookings_overview:
